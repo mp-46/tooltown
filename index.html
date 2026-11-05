@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>⚙️ The Mystery of Tooltown — 90s CD-ROM Adventure</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=JetBrains+Mono:wght@700;800;900&family=VT323&family=Press+Start+2P&display=swap');
+
+    :root {
+      --bg: #030712;
+      --card-bg: #0d1527;
+      --brass: #eab308;
+      --bronze: #b45309;
+      --copper: #f97316;
+      --steam-cyan: #38bdf8;
+      --parchment: #fef3c7;
+      --parchment-border: #d97706;
+      --wood-dark: #271406;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: #020617;
+      color: var(--text);
+      font-family: 'Outfit', sans-serif;
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      touch-action: manipulation;
+    }
+
+    #gameWrapper {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      max-width: min(98vw, 760px);
+      max-height: min(98vh, 920px);
+      max-height: min(98dvh, 920px);
+      background: var(--card-bg);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 0 60px rgba(234, 179, 8, 0.25);
+      border: 3px solid #b45309;
+      border-radius: 18px;
+      overflow: hidden;
+    }
+
+    /* 90s Multimedia Top Header */
+    .top-header {
+      background: #1c0e05;
+      border-bottom: 2px solid #b45309;
+      padding: 8px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+      z-index: 20;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-title {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 11px;
+      color: var(--brass);
+      letter-spacing: 1px;
+      text-shadow: 0 0 10px rgba(234, 179, 8, 0.8);
+    }
+
+    .header-btns {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-hdr {
+      background: #3b1d07;
+      border: 1px solid #b45309;
+      color: #fef08a;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.12s ease;
+    }
+    .btn-hdr:hover {
+      background: #b45309;
+      color: #fff;
+    }
+    .btn-hdr:active {
+      transform: scale(0.95);
+      background: #eab308;
+      color: #000;
+    }
+
+    /* Sub-header Navigation / Quick Access Bar */
+    .nav-bar {
+      background: #120903;
+      border-bottom: 1px solid #78350f;
+      padding: 6px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+      gap: 8px;
+    }
+
+    .location-tag {
+      font-size: 12px;
+      font-weight: 800;
+      color: #fde047;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .btn-nav-action {
+      background: #291204;
+      border: 1px solid #d97706;
+      color: #fef3c7;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+    }
+    .btn-nav-action.active {
+      background: #d97706;
+      color: #000;
+      box-shadow: 0 0 10px rgba(217, 119, 6, 0.6);
+    }
+
+    /* Main Viewport / Adventure Scene */
+    .scene-viewport {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      background: #080d1a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    #sceneCanvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: #0c1424;
+      cursor: crosshair;
+    }
+
+    /* Dialogue & Story Ribbon at Bottom */
+    .dialogue-bar {
+      background: #140b04;
+      border-top: 2px solid #b45309;
+      padding: 10px 14px;
+      flex-shrink: 0;
+      min-height: 90px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .dialogue-portrait {
+      width: 58px;
+      height: 58px;
+      background: #2a1607;
+      border: 2px solid #eab308;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      flex-shrink: 0;
+      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.6);
+    }
+
+    .dialogue-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .dialogue-speaker {
+      font-size: 11px;
+      font-weight: 900;
+      color: var(--brass);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .dialogue-text {
+      font-size: 13px;
+      color: #fef08a;
+      line-height: 1.35;
+      min-height: 36px;
+    }
+
+    .dialogue-buttons {
+      display: flex;
+      gap: 6px;
+      margin-top: 2px;
+    }
+
+    .btn-dialog-choice {
+      background: #2e1505;
+      border: 1px solid #d97706;
+      color: #fef3c7;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.12s;
+    }
+    .btn-dialog-choice:hover {
+      background: #d97706;
+      color: #000;
+    }
+
+    /* Backpack & Inventory Tray */
+    .inventory-tray {
+      background: #1c0e05;
+      border-top: 1px solid #78350f;
+      padding: 6px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow-x: auto;
+      flex-shrink: 0;
+    }
+
+    .tray-title {
+      font-size: 10px;
+      color: #b45309;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .item-slot {
+      width: 44px;
+      height: 44px;
+      background: #2a1607;
+      border: 2px dashed #78350f;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.12s;
+      flex-shrink: 0;
+    }
+    .item-slot.filled {
+      border-style: solid;
+      border-color: #d97706;
+      background: #3b1f0a;
+    }
+    .item-slot.selected {
+      border-color: #facc15;
+      box-shadow: 0 0 12px rgba(250, 204, 21, 0.7);
+      transform: translateY(-2px);
+    }
+    .item-key-badge {
+      position: absolute;
+      top: 1px;
+      left: 3px;
+      font-size: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      color: #fef08a;
+      font-weight: 800;
+    }
+
+    /* Hotspot Interactive Tooltips */
+    .hotspot-hover-label {
+      position: absolute;
+      background: rgba(18, 9, 3, 0.92);
+      border: 1px solid #eab308;
+      color: #fef08a;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      pointer-events: none;
+      transform: translate(-50%, -120%);
+      white-space: nowrap;
+      z-index: 15;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+      display: none;
+    }
+
+    /* Modals & Overlays */
+    .modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(3, 7, 18, 0.94);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      padding: 16px;
+    }
+    .modal-overlay.hidden { display: none; }
+
+    .modal-box {
+      background: #1a0f06;
+      border: 3px solid #b45309;
+      border-radius: 18px;
+      padding: 22px;
+      max-width: 520px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: 0 10px 50px rgba(180, 83, 9, 0.5);
+      text-align: center;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-title {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 14px;
+      color: var(--brass);
+      line-height: 1.4;
+      text-shadow: 0 0 12px rgba(234, 179, 8, 0.8);
+    }
+
+    .modal-desc {
+      font-size: 12px;
+      color: #fef3c7;
+      line-height: 1.4;
+    }
+
+    .btn-action-big {
+      background: linear-gradient(135deg, #b45309, #d97706);
+      border: 1px solid #facc15;
+      color: #fff;
+      padding: 13px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(217, 119, 6, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.15s ease;
+    }
+    .btn-action-big:active {
+      transform: scale(0.97);
+      background: #b45309;
+    }
+
+    .btn-action-sub {
+      background: #2a1607;
+      border: 1px solid #78350f;
+      color: #fef3c7;
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn-action-sub:active {
+      background: #3b1f0a;
+    }
+
+    /* Backpack Inspection Card */
+    .backpack-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 8px 0;
+    }
+
+    .bp-card {
+      background: #271406;
+      border: 1px solid #b45309;
+      border-radius: 10px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .bp-card:hover {
+      border-color: #facc15;
+      transform: translateY(-2px);
+    }
+    .bp-card-icon { font-size: 28px; }
+    .bp-card-name { font-size: 11px; font-weight: 800; color: #fde047; }
+    .bp-card-type { font-size: 9px; color: #94a3b8; text-transform: uppercase; }
+
+    /* Interactive Puzzle Box Container */
+    .puzzle-sandbox {
+      background: #0b0704;
+      border: 2px solid #b45309;
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="gameWrapper">
+
+    <!-- Top 90s Multimedia Header -->
+    <header class="top-header">
+      <div class="brand-group">
+        <span style="font-size: 18px;">⚙️</span>
+        <span class="brand-title">THE MYSTERY OF TOOLTOWN</span>
+      </div>
+
+      <div class="header-btns">
+        <button id="btnSound" class="btn-hdr" title="Toggle Sound (Mute)">🔊</button>
+        <!-- Board / Scene Reset Button -->
+        <button id="btnResetScene" class="btn-hdr" title="Reset Current Scene / Puzzle (Key: R)">🔄 Reset</button>
+        <!-- Title Screen Button -->
+        <button id="btnExitTitle" class="btn-hdr" title="Return to Title Screen (Key: Esc)">◀ Title</button>
+      </div>
+    </header>
+
+    <!-- Sub-header Navigation Bar -->
+    <div class="nav-bar">
+      <div id="locationTag" class="location-tag">
+        <span>🗺️</span> <span id="locName">Valley of the Machines Map</span>
+      </div>
+
+      <div class="nav-actions">
+        <button id="btnNavMap" class="btn-nav-action active" title="Open Map (Key: M or Tab)">🗺️ Map</button>
+        <button id="btnNavBackpack" class="btn-nav-action" title="Open Backpack (Key: B or I)">🎒 Backpack (<span id="bagCount">3</span>)</button>
+        <button id="btnNavHelp" class="btn-nav-action" title="Detective Hints &amp; Journal">📜 Clues</button>
+      </div>
+    </div>
+
+    <!-- Main Viewport / Interactive Scene Canvas -->
+    <div class="scene-viewport" id="viewport">
+      <canvas id="sceneCanvas"></canvas>
+      <div id="hotspotTooltip" class="hotspot-hover-label">Examine Hotspot</div>
+    </div>
+
+    <!-- Dialogue / Narrative Ribbon -->
+    <div class="dialogue-bar">
+      <div id="charPortrait" class="dialogue-portrait">🦁</div>
+      <div class="dialogue-body">
+        <div id="charSpeaker" class="dialogue-speaker">Detective Oslo</div>
+        <div id="dialogueText" class="dialogue-text">
+          Welcome to Tooltown! The Geological Society sent us to uncover the secrets of the Valley of the Machines. Tap anywhere to inspect, or pick a destination on the map!
+        </div>
+        <div id="dialogueChoices" class="dialogue-buttons"></div>
+      </div>
+    </div>
+
+    <!-- Bottom Inventory / Quick Tool Bar -->
+    <div class="inventory-tray">
+      <div class="tray-title">Tool Belt:</div>
+      <div class="item-slot filled" data-item="letter" title="Letter from Geological Society">
+        <span class="item-key-badge">1</span>
+        <span>📜</span>
+      </div>
+      <div class="item-slot filled" data-item="artifact" title="Ancient Brass Gear">
+        <span class="item-key-badge">2</span>
+        <span>⚙️</span>
+      </div>
+      <div class="item-slot filled" data-item="crowbar" title="Steel Crowbar (Lever)">
+        <span class="item-key-badge">3</span>
+        <span>🔨</span>
+      </div>
+      <div class="item-slot" data-slot="3" title="Empty Slot">
+        <span class="item-key-badge">4</span>
+        <span></span>
+      </div>
+      <div class="item-slot" data-slot="4" title="Empty Slot">
+        <span class="item-key-badge">5</span>
+        <span></span>
+      </div>
+      <div class="item-slot" data-slot="5" title="Empty Slot">
+        <span class="item-key-badge">6</span>
+        <span></span>
+      </div>
+    </div>
+
+    <!-- Title Screen Modal -->
+    <div id="titleModal" class="modal-overlay">
+      <div class="modal-box">
+        <img src="assets/tool_splash.png" style="width:100%;max-width:380px;border-radius:12px;border:2px solid #b45309;image-rendering:pixelated;margin:0 auto 6px auto;box-shadow:0 0 25px rgba(180,83,9,0.6);" alt="The Mystery of Tooltown 1996">
+        <div class="modal-title">THE MYSTERY OF TOOLTOWN</div>
+        <p class="modal-desc">
+          Authentic 1996 CD-ROM adventure restored for mobile touchscreen, keyboard &amp; mouse! Unravel the ancient engineering secrets of the <b>Valley of the Machines</b>.
+        </p>
+
+        <!-- Controls Guide -->
+        <div style="background: rgba(0,0,0,0.5); border: 1px solid #78350f; border-radius: 10px; padding: 10px; text-align: left; font-size: 11px; color: #fde047;">
+          🎮 <b>Touch, Mouse &amp; Keyboard Controls:</b><br>
+          • <b>Touch / Mouse:</b> Tap or click hotspots, characters, tools, and map pins.<br>
+          • <b>Keyboard:</b> <b>M</b> or <b>Tab</b> opens the Map; <b>B</b> or <b>I</b> opens the Backpack; <b>1-6</b> selects items; <b>R</b> resets scene; <b>Esc</b> exits to Title.
+        </div>
+
+        <button id="btnStartAdventure" class="btn-action-big">
+          <span>🧭</span> BEGIN ADVENTURE
+        </button>
+      </div>
+    </div>
+
+    <!-- Backpack / Journal Modal -->
+    <div id="backpackModal" class="modal-overlay hidden">
+      <div class="modal-box">
+        <div class="modal-title">🎒 OSLO'S BACKPACK &amp; JOURNAL</div>
+        <p class="modal-desc">
+          Click or tap any collected tool to inspect its mechanical advantage and simple machine physics!
+        </p>
+
+        <div class="backpack-grid" id="backpackGrid">
+          <!-- Filled dynamically -->
+        </div>
+
+        <div id="toolDetailBox" style="display:none; background:#0b0704; border:1px solid #eab308; border-radius:10px; padding:10px; text-align:left;">
+          <div id="toolDetailTitle" style="color:#fde047; font-weight:900; font-size:12px;">Tool Name</div>
+          <div id="toolDetailDesc" style="color:#fef3c7; font-size:11px; margin-top:4px; line-height:1.4;">Tool description</div>
+        </div>
+
+        <button id="btnCloseBackpack" class="btn-action-big">
+          <span>✔</span> CLOSE BACKPACK
+        </button>
+      </div>
+    </div>
+
+    <!-- Interactive Simple Machine Puzzle Modal -->
+    <div id="puzzleModal" class="modal-overlay hidden">
+      <div class="modal-box">
+        <div id="puzzleModalTitle" class="modal-title">⚙️ GEAR TRAIN MECHANISM</div>
+        <p class="modal-desc" id="puzzleModalDesc">
+          Connect the motor gear to the dynamo by slotting in the missing teeth ratios!
+        </p>
+
+        <div class="puzzle-sandbox" id="puzzleSandbox">
+          <!-- Dynamic Interactive Puzzle Canvas/Controls -->
+          <canvas id="puzzleCanvas" width="460" height="240" style="background:#050302; border-radius:8px; width:100%; height:auto;"></canvas>
+          <div id="puzzleControls" style="display:flex; justify-content:center; gap:8px;"></div>
+        </div>
+
+        <div id="puzzleFeedback" style="font-size:12px; font-weight:800; color:#38bdf8;"></div>
+
+        <button id="btnClosePuzzle" class="btn-action-big">
+          <span>✔</span> COMPLETE &amp; RETURN
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    /* =====================================================================
+       RETRO SOUND SYNTHESIZER & 1996 AUTHENTIC AUDIO PLAYER
+       ===================================================================== */
+    class TooltownAudio {
+      constructor() {
+        this.ctx = null;
+        this.soundEnabled = true;
+      }
+
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) {
+            this.ctx = new AudioContext();
+          }
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+
+      playFile(path) {
+        if (!this.soundEnabled) return;
+        try {
+          const snd = new Audio(path);
+          snd.volume = 0.65;
+          snd.play().catch(() => {});
+        } catch (e) {}
+      }
+
+      click() {
+        this.playFile('assets/intro/024_BlippleS.wav');
+      }
+
+      door() {
+        this.playFile('assets/hardware/006_Door SqueekS.wav');
+      }
+
+      gearRachet() {
+        this.playFile('assets/ohouse/047_Spinning Bicycle WheelS.wav');
+      }
+
+      discoveryChime() {
+        this.playFile('assets/ohouse/035_Ding Dong ChimesS.wav');
+      }
+
+      register() {
+        this.playFile('assets/hardware/273_RegisterS.wav');
+      }
+
+      bading() {
+        this.playFile('assets/city/081_BadingS.wav');
+      }
+
+      steamWhoosh() {
+        if (!this.soundEnabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const bufferSize = this.ctx.sampleRate * 0.25;
+          const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+          const data = buffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+          const noise = this.ctx.createBufferSource();
+          noise.buffer = buffer;
+          const filter = this.ctx.createBiquadFilter();
+          filter.type = 'bandpass';
+          filter.frequency.setValueAtTime(800, this.ctx.currentTime);
+          const gain = this.ctx.createGain();
+          gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.25);
+          noise.connect(filter);
+          filter.connect(gain);
+          gain.connect(this.ctx.destination);
+          noise.start();
+        } catch (e) {}
+      }
+    }
+
+    const sound = new TooltownAudio();
+
+    /* =====================================================================
+       AUTHENTIC 1996 BACKGROUND & ASSET PRELOADER
+       ===================================================================== */
+    const bgImages = {};
+    const BG_URLS = {
+      map: 'assets/map/007_map thing brighttest.png',
+      house: 'assets/ohouse/032_OSLOS HOUSENC  pict.png',
+      store: 'assets/grosto/031_GROCERY STORE IND PICT.png',
+      museum: 'assets/mus/023_MUSEUM BKGRDpict.png',
+      shop: 'assets/mall/022_MALL ENTRANCEIND PICT.png',
+      univ: 'assets/univ/019_COLLEGEindpict.png',
+      core: 'assets/hardware/330_cast_330.png'
+    };
+
+    for (const [key, url] of Object.entries(BG_URLS)) {
+      const img = new Image();
+      img.src = url;
+      img.onload = () => {
+        if (typeof drawScene === 'function') drawScene();
+      };
+      bgImages[key] = img;
+    }
+
+    /* =====================================================================
+       ADVENTURE STATE & KNOWLEDGE BASE
+       ===================================================================== */
+    const INVENTORY_DB = {
+      letter: {
+        id: 'letter',
+        name: 'Mayor\'s Letter',
+        icon: '📜',
+        img: 'assets/intro/017_letter bkgrd 1-a ind pict.png',
+        type: 'Clue Document',
+        desc: 'Official urgent dispatch from Mayor Elmo explaining that the ancient machines in the Valley have stopped spinning!'
+      },
+      artifact: {
+        id: 'artifact',
+        name: 'Valley Map Piece',
+        icon: '🗺️',
+        img: 'assets/backpack/072_PIECE OF VALLEY MAPIND PICT.png',
+        type: 'Ancient Map Fragment',
+        desc: 'A preserved fragment of the Valley of the Machines map revealing the secret passage to the Core.'
+      },
+      crowbar: {
+        id: 'crowbar',
+        name: 'Forged Crowbar',
+        icon: '⛏️',
+        img: 'assets/backpack/093_crowbar.png',
+        type: 'Class 1 Lever',
+        desc: 'Rigid bar pivoting on a fulcrum. Allows a small downward force to generate massive upward prying force.'
+      },
+      pulley: {
+        id: 'pulley',
+        name: 'Ladder & Pulley',
+        icon: '🪢',
+        img: 'assets/backpack/076_ladder.png',
+        type: 'Pulley System',
+        desc: 'System of two or more pulleys with a rope. Cuts the required lifting effort in half for each supporting rope segment.'
+      },
+      jack: {
+        id: 'jack',
+        name: 'Hand Drill',
+        icon: '🔩',
+        img: 'assets/backpack/107_drill.png',
+        type: 'Screw Mechanism',
+        desc: 'An inclined plane wrapped around a cylinder. Rotational force turns into tremendous linear lifting power.'
+      },
+      wedge: {
+        id: 'wedge',
+        name: 'Pointy Shovel',
+        icon: '📐',
+        img: 'assets/backpack/070_pointy shovel.png',
+        type: 'Double Inclined Plane',
+        desc: 'Dual mechanical advantage: the blade acts as a wedge, while the long handle acts as a lever.'
+      }
+    };
+
+    let inventory = ['letter', 'artifact', 'crowbar'];
+    let selectedItem = null;
+    let currentSceneId = 'map'; // 'map', 'house', 'store', 'museum', 'shop', 'univ', 'core'
+
+    // Scene progression & puzzle flags
+    const gameState = {
+      houseWindowPried: false,
+      housePulleyFixed: false,
+      storeScaleBalanced: false,
+      storeRampClear: false,
+      museumVaultOpen: false,
+      museumScrewPumped: false,
+      shopGearConnected: false,
+      univChalkboardSolved: false,
+      coreActivated: false
+    };
+
+    /* =====================================================================
+       CANVAS & SCENE SYSTEM
+       ===================================================================== */
+    const canvas = document.getElementById('sceneCanvas');
+    const ctx = canvas.getContext('2d');
+    const viewport = document.getElementById('viewport');
+    const tooltip = document.getElementById('hotspotTooltip');
+
+    const locName = document.getElementById('locName');
+    const charPortrait = document.getElementById('charPortrait');
+    const charSpeaker = document.getElementById('charSpeaker');
+    const dialogueText = document.getElementById('dialogueText');
+    const dialogueChoices = document.getElementById('dialogueChoices');
+    const bagCount = document.getElementById('bagCount');
+
+    // Hotspot Definitions per Scene
+    const SCENES = {
+      map: {
+        name: 'Valley of the Machines Map',
+        speaker: 'Detective Oslo',
+        portrait: 'assets/city/037_RICKpict.png',
+        dialogue: 'Here is the town map! Where should we investigate first? The Old House, the Tool Workshop, the Museum, or the University?',
+        hotspots: [
+          { id: 'house', x: 0.22, y: 0.32, r: 38, icon: '🏡', label: 'Old House (Inventor)' },
+          { id: 'store', x: 0.40, y: 0.60, r: 36, icon: '🏪', label: 'Grocery Store & Mill' },
+          { id: 'museum', x: 0.60, y: 0.28, r: 40, icon: '🏛️', label: 'Museum of Ancient Tools' },
+          { id: 'shop', x: 0.76, y: 0.58, r: 38, icon: '🔧', label: 'Al\'s Tool Workshop' },
+          { id: 'univ', x: 0.48, y: 0.24, r: 42, icon: '🎓', label: 'University Science Hall' },
+          { id: 'core', x: 0.50, y: 0.82, r: 44, icon: '⚙️', label: 'Ancient Machine Core' }
+        ]
+      },
+      house: {
+        name: 'Inventor\'s Old House',
+        speaker: 'Oslo',
+        portrait: 'assets/city/037_RICKpict.png',
+        dialogue: 'Look at all these wacky inventions! The shuttered basement window is stuck shut, and the heavy dumbwaiter needs counterweights.',
+        hotspots: [
+          { id: 'h_window', x: 0.25, y: 0.48, r: 35, icon: '🪟', label: 'Stuck Basement Window (Needs Lever)' },
+          { id: 'h_dumbwaiter', x: 0.72, y: 0.45, r: 38, icon: '🪢', label: 'Dumbwaiter Pulley' },
+          { id: 'h_desk', x: 0.48, y: 0.70, r: 32, icon: '📜', label: 'Inventor\'s Blueprint Notes' }
+        ]
+      },
+      store: {
+        name: 'Grocery & Grain Mill',
+        speaker: 'Grocer Higgins',
+        portrait: 'assets/grosto/055_WALKING BOBIND PICT.png',
+        dialogue: 'Welcome! The delivery ramp is too steep, and our mechanical flour mill balance is jammed! Can you help?',
+        hotspots: [
+          { id: 's_scale', x: 0.32, y: 0.62, r: 36, icon: '⚖️', label: 'Balance Scale Mechanism' },
+          { id: 's_ramp', x: 0.70, y: 0.52, r: 40, icon: '📐', label: 'Loading Dock Inclined Plane' },
+          { id: 's_flour', x: 0.50, y: 0.36, r: 30, icon: '🌾', label: 'Grain Mill Axle' }
+        ]
+      },
+      museum: {
+        name: 'Museum of Antiquities',
+        speaker: 'Curator Archimedes',
+        portrait: 'assets/city/120_RICK II pict.png',
+        dialogue: 'Marvel at our simple machine relics! An Archimedes screw pumps water, and the grand vault requires 3 machine glyphs to open.',
+        hotspots: [
+          { id: 'm_screw', x: 0.28, y: 0.45, r: 38, icon: '🌀', label: 'Archimedes Screw Water Pump' },
+          { id: 'm_vault', x: 0.72, y: 0.42, r: 42, icon: '🚪', label: 'Locked Vault of Antiquities' },
+          { id: 'm_display', x: 0.50, y: 0.65, r: 34, icon: '🗿', label: 'Ancient Wedge Exhibit' }
+        ]
+      },
+      shop: {
+        name: 'Al\'s Tool Workshop',
+        speaker: 'Al the Mechanic',
+        portrait: 'assets/hardware/203_RICKpict.png',
+        dialogue: 'Hey kid! If you want to fix machines, you gotta know your gears. My dynamo gearbox is stripped!',
+        hotspots: [
+          { id: 'sh_gearbox', x: 0.50, y: 0.48, r: 46, icon: '⚙️', label: 'Dynamo Gearbox (Puzzle)' },
+          { id: 'sh_bench', x: 0.25, y: 0.65, r: 35, icon: '🧰', label: 'Tool Assembly Bench' },
+          { id: 'sh_jack', x: 0.78, y: 0.68, r: 34, icon: '🔩', label: 'Hydraulic Jackscrew' }
+        ]
+      },
+      univ: {
+        name: 'University Science Hall',
+        speaker: 'Professor Gearson',
+        portrait: 'assets/grosto/058_OTHER BOBIND PICT.png',
+        dialogue: 'Ah, the Geological Society investigators! The 6 classical simple machines are the foundation of all civilization! Let us review the chalkboard.',
+        hotspots: [
+          { id: 'u_chalk', x: 0.45, y: 0.38, r: 44, icon: '📋', label: 'Simple Machines Chalkboard' },
+          { id: 'u_book', x: 0.22, y: 0.64, r: 32, icon: '📖', label: 'Tooltown History Tome' },
+          { id: 'u_secret', x: 0.80, y: 0.58, r: 36, icon: '🗝️', label: 'Secret Passage to Machine Core' }
+        ]
+      },
+      core: {
+        name: 'The Ancient Machine Core',
+        speaker: 'Oslo',
+        portrait: 'assets/city/037_RICKpict.png',
+        dialogue: 'We found the Great Machine! Slot in the gears and balance the power levers to restore power to the Valley!',
+        hotspots: [
+          { id: 'c_slot', x: 0.50, y: 0.45, r: 50, icon: '⚡', label: 'Main Power Hub (Final Puzzle)' },
+          { id: 'c_pipes', x: 0.25, y: 0.65, r: 35, icon: '🚰', label: 'Cooling Pipes' },
+          { id: 'c_lever', x: 0.75, y: 0.65, r: 35, icon: '🕹️', label: 'Master Engagement Lever' }
+        ]
+      }
+    };
+
+    function resizeCanvas() {
+      const rect = viewport.getBoundingClientRect();
+      canvas.width = Math.floor(rect.width);
+      canvas.height = Math.floor(rect.height);
+      drawScene();
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    /* =====================================================================
+       SCENE DRAWING & RENDERING
+       ===================================================================== */
+    let hoveredHotspot = null;
+
+    function drawScene() {
+      const w = canvas.width;
+      const h = canvas.height;
+      if (w === 0 || h === 0) return;
+
+      const sc = SCENES[currentSceneId];
+
+      if (currentSceneId === 'map') {
+        drawMapScene(w, h, sc);
+      } else {
+        drawRoomScene(w, h, sc);
+      }
+    }
+
+    function drawMapScene(w, h, sc) {
+      const bg = bgImages.map;
+      if (bg && bg.complete && bg.naturalWidth > 0) {
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(bg, 0, 0, w, h);
+      } else {
+        // Fallback antique parchment map base
+        ctx.fillStyle = '#1e140a';
+        ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = '#fef3c7';
+        ctx.fillRect(16, 16, w - 32, h - 32);
+        ctx.strokeStyle = '#b45309';
+        ctx.lineWidth = 3;
+        ctx.strokeRect(16, 16, w - 32, h - 32);
+      }
+
+      // Draw Location Pins / Hotspots
+      sc.hotspots.forEach(hs => {
+        const hx = hs.x * w;
+        const hy = hs.y * h;
+        const isHovered = (hoveredHotspot === hs);
+
+        ctx.save();
+        ctx.shadowColor = isHovered ? '#eab308' : 'rgba(0,0,0,0.6)';
+        ctx.shadowBlur = isHovered ? 16 : 6;
+
+        // Vintage brass marker bezel
+        ctx.fillStyle = isHovered ? 'rgba(254, 240, 138, 0.95)' : 'rgba(28, 14, 5, 0.85)';
+        ctx.strokeStyle = isHovered ? '#facc15' : '#b45309';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.arc(hx, hy, hs.r * (isHovered ? 1.15 : 1.0), 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        // Pin Icon
+        ctx.font = `${Math.floor(hs.r * 0.9)}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(hs.icon, hx, hy + 2);
+
+        // Location Label Banner
+        ctx.font = 'bold 11px Outfit, sans-serif';
+        ctx.fillStyle = isHovered ? '#fef08a' : '#fffbeb';
+        ctx.shadowColor = 'rgba(0,0,0,0.9)';
+        ctx.shadowBlur = 4;
+        ctx.fillText(hs.label.split(' ')[0], hx, hy + hs.r + 14);
+        ctx.restore();
+      });
+    }
+
+    function drawRoomScene(w, h, sc) {
+      const bg = bgImages[currentSceneId];
+      if (bg && bg.complete && bg.naturalWidth > 0) {
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(bg, 0, 0, w, h);
+      } else {
+        // Fallback gradient
+        const grad = ctx.createLinearGradient(0, 0, 0, h);
+        grad.addColorStop(0, '#1c1917');
+        grad.addColorStop(0.7, '#292524');
+        grad.addColorStop(1, '#0c0a09');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, w, h);
+      }
+
+      // Draw Hotspots in the room
+      sc.hotspots.forEach(hs => {
+        const hx = hs.x * w;
+        const hy = hs.y * h;
+        const isHovered = (hoveredHotspot === hs);
+
+        ctx.save();
+        ctx.shadowColor = isHovered ? '#38bdf8' : 'rgba(0,0,0,0.6)';
+        ctx.shadowBlur = isHovered ? 20 : 8;
+
+        // Circular mechanism frame
+        ctx.fillStyle = isHovered ? 'rgba(56, 189, 248, 0.85)' : 'rgba(20, 10, 4, 0.8)';
+        ctx.strokeStyle = isHovered ? '#bae6fd' : '#eab308';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.arc(hx, hy, hs.r * (isHovered ? 1.15 : 1.0), 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        // Hotspot Symbol
+        ctx.font = `${Math.floor(hs.r * 0.9)}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(hs.icon, hx, hy + 2);
+        ctx.restore();
+      });
+    }
+
+    /* =====================================================================
+       HOTSPOT HOVER & CLICK HANDLING (TOUCH, MOUSE)
+       ===================================================================== */
+    function getHotspotAt(px, py) {
+      const w = canvas.width;
+      const h = canvas.height;
+      const sc = SCENES[currentSceneId];
+      if (!sc) return null;
+
+      for (const hs of sc.hotspots) {
+        const hx = hs.x * w;
+        const hy = hs.y * h;
+        if (Math.hypot(px - hx, py - hy) <= hs.r * 1.25) {
+          return hs;
+        }
+      }
+      return null;
+    }
+
+    viewport.addEventListener('pointermove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      const hit = getHotspotAt(x, y);
+      if (hit !== hoveredHotspot) {
+        hoveredHotspot = hit;
+        drawScene();
+
+        if (hit) {
+          tooltip.textContent = hit.label;
+          tooltip.style.left = `${e.clientX - rect.left}px`;
+          tooltip.style.top = `${e.clientY - rect.top}px`;
+          tooltip.style.display = 'block';
+        } else {
+          tooltip.style.display = 'none';
+        }
+      } else if (hit) {
+        tooltip.style.left = `${e.clientX - rect.left}px`;
+        tooltip.style.top = `${e.clientY - rect.top}px`;
+      }
+    });
+
+    viewport.addEventListener('pointerleave', () => {
+      hoveredHotspot = null;
+      tooltip.style.display = 'none';
+      drawScene();
+    });
+
+    viewport.addEventListener('pointerdown', (e) => {
+      sound.init();
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      const hit = getHotspotAt(x, y);
+      if (hit) {
+        sound.click();
+        triggerHotspot(hit);
+      }
+    });
+
+    /* =====================================================================
+       HOTSPOT INTERACTION LOGIC & STORY PROGRESSION
+       ===================================================================== */
+    function switchScene(sceneId) {
+      currentSceneId = sceneId;
+      const sc = SCENES[sceneId];
+      locName.textContent = sc.name;
+      setDialogue(sc.speaker, sc.portrait, sc.dialogue);
+      dialogueChoices.innerHTML = '';
+
+      // Update Nav Map button active state
+      document.getElementById('btnNavMap').classList.toggle('active', sceneId === 'map');
+
+      if (sceneId === 'map') {
+        sound.click();
+      } else {
+        sound.door();
+      }
+      drawScene();
+    }
+
+    function triggerHotspot(hs) {
+      if (currentSceneId === 'map') {
+        // Map navigation
+        switchScene(hs.id);
+        return;
+      }
+
+      // In-Room Hotspots
+      switch (hs.id) {
+        // --- OLD HOUSE ---
+        case 'h_window':
+          if (!gameState.houseWindowPried) {
+            if (selectedItem === 'crowbar') {
+              gameState.houseWindowPried = true;
+              sound.discoveryChime();
+              setDialogue('Oslo', '🦁', 'CLICK-CREAK! Using the crowbar as a Class 1 lever gave us enough leverage to pry the rusted latch open! Inside we found a Block & Tackle Pulley!');
+              addItemToInventory('pulley');
+            } else {
+              setDialogue('Oslo', '🦁', 'The window is jammed tight with rust! Our bare hands can\'t generate enough torque. Select a Lever from your toolbelt to pry it!');
+            }
+          } else {
+            setDialogue('Oslo', '🦁', 'The basement window is already open. Fresh air is blowing through the machine shafts.');
+          }
+          break;
+
+        case 'h_dumbwaiter':
+          setDialogue('Oslo', '🦁', 'This dumbwaiter uses fixed pulleys to change the direction of lifting force. With the new block & tackle, lifting supplies is effortless!');
+          break;
+
+        case 'h_desk':
+          setDialogue('Oslo', '🦁', 'Notes from the eccentric inventor: "Remember, Work = Force × Distance. A ramp lets you push with less force over a longer distance!"');
+          break;
+
+        // --- GROCERY STORE ---
+        case 's_scale':
+          if (!gameState.storeScaleBalanced) {
+            gameState.storeScaleBalanced = true;
+            sound.discoveryChime();
+            setDialogue('Grocer Higgins', '🧔', 'You balanced the unequal arm scale! In return, take this Hardened Stone Wedge from our grain mill!');
+            addItemToInventory('wedge');
+          } else {
+            setDialogue('Grocer Higgins', '🧔', 'The balance scale is in perfect equilibrium. Equal moments of force!');
+          }
+          break;
+
+        case 's_ramp':
+          setDialogue('Grocer Higgins', '🧔', 'Our inclined plane ramp reduces the effort required to lift heavy flour barrels from ground level onto wagons.');
+          break;
+
+        case 's_flour':
+          setDialogue('Grocer Higgins', '🧔', 'The wheel & axle mechanism inside the mill amplifies our turning effort to grind bushels of wheat.');
+          break;
+
+        // --- MUSEUM ---
+        case 'm_screw':
+          sound.gearRachet();
+          setDialogue('Curator Archimedes', '🦉', 'Splendid! You turned the Archimedes Screw! The spiraled helical blade lifts water upwards inside the cylinder.');
+          break;
+
+        case 'm_vault':
+          if (inventory.includes('artifact') && inventory.includes('pulley') && inventory.includes('wedge')) {
+            sound.discoveryChime();
+            setDialogue('Curator Archimedes', '🦉', 'OPEN SESAME! All 3 machine glyphs recognized! The ancient vault opens, revealing the Machine Core Activation Key!');
+            addItemToInventory('jack');
+          } else {
+            setDialogue('Curator Archimedes', '🦉', 'The vault is locked with three simple-machine tumblers: a Wheel, a Pulley, and a Wedge. Find all three tools first!');
+          }
+          break;
+
+        case 'm_display':
+          setDialogue('Curator Archimedes', '🦉', 'The wedge is two inclined planes back-to-back. It transforms a forward blow into massive sideways splitting force.');
+          break;
+
+        // --- WORKSHOP ---
+        case 'sh_gearbox':
+          openPuzzleModal('gear');
+          break;
+
+        case 'sh_bench':
+          setDialogue('Al the Mechanic', '🧑‍🔧', 'A good mechanic always checks their mechanical advantage before tightening bolts.');
+          break;
+
+        case 'sh_jack':
+          setDialogue('Al the Mechanic', '🧑‍🔧', 'This jackscrew can lift an entire locomotive! The screw thread converts circular turns into immense linear lift.');
+          break;
+
+        // --- UNIVERSITY ---
+        case 'u_chalk':
+          setDialogue('Professor Gearson', '👨‍🏫', 'The Six Simple Machines: 1. Lever, 2. Wheel & Axle, 3. Pulley, 4. Inclined Plane, 5. Wedge, 6. Screw. Master them all!');
+          break;
+
+        case 'u_book':
+          setDialogue('Professor Gearson', '👨‍🏫', '"Chronicles of Tooltown": Long ago, the Valley was powered by a central hydraulic engine hidden in the Mountain Core.');
+          break;
+
+        case 'u_secret':
+          sound.discoveryChime();
+          setDialogue('Professor Gearson', '👨‍🏫', 'You found the secret tunnel! This passage leads straight to the underground Ancient Machine Core!');
+          switchScene('core');
+          break;
+
+        // --- MACHINE CORE ---
+        case 'c_slot':
+          if (inventory.includes('jack') && gameState.shopGearConnected) {
+            sound.discoveryChime();
+            gameState.coreActivated = true;
+            setDialogue('Oslo', '🦁', '🎉 EUREKA! You slotted the jackscrew, connected the gears, and released the water valves! The Great Machine of Tooltown roars back to life! YOU SOLVED THE MYSTERY!');
+          } else {
+            setDialogue('Oslo', '🦁', 'The core needs the gearbox repaired at Al\'s Shop and the vault key from the Museum before it can be engaged!');
+          }
+          break;
+
+        case 'c_pipes':
+          sound.steamWhoosh();
+          setDialogue('Oslo', '🦁', 'Steam pressure is nominal! All pressure relief valves functioning.');
+          break;
+
+        case 'c_lever':
+          sound.gearRachet();
+          setDialogue('Oslo', '🦁', 'Main turbine lever engaged!');
+          break;
+      }
+    }
+
+    function setDialogue(speaker, portrait, text) {
+      charSpeaker.textContent = speaker;
+      let pSrc = portrait;
+      if (!pSrc || !pSrc.includes('.png')) {
+        const sc = SCENES[currentSceneId];
+        if (sc && sc.portrait && sc.portrait.includes('.png')) {
+          pSrc = sc.portrait;
+        } else {
+          pSrc = 'assets/city/037_RICKpict.png';
+        }
+      }
+      charPortrait.innerHTML = `<img src="${pSrc}" style="width:100%;height:100%;object-fit:contain;image-rendering:pixelated;" alt="${speaker}">`;
+      dialogueText.textContent = text;
+    }
+
+    /* =====================================================================
+       INVENTORY & BACKPACK MODAL
+       ===================================================================== */
+    function addItemToInventory(itemId) {
+      if (!inventory.includes(itemId)) {
+        inventory.push(itemId);
+        bagCount.textContent = inventory.length;
+        renderToolbelt();
+      }
+    }
+
+    function renderToolbelt() {
+      const slots = document.querySelectorAll('.item-slot');
+      slots.forEach((slot, idx) => {
+        const itemKey = inventory[idx];
+        if (itemKey && INVENTORY_DB[itemKey]) {
+          const itm = INVENTORY_DB[itemKey];
+          slot.className = `item-slot filled ${selectedItem === itm.id ? 'selected' : ''}`;
+          slot.dataset.item = itm.id;
+          slot.title = `${itm.name} (${itm.type})`;
+          const imgHtml = itm.img ? `<img src="${itm.img}" style="max-height:28px;max-width:28px;object-fit:contain;image-rendering:pixelated;display:block;" alt="${itm.name}">` : `<span>${itm.icon}</span>`;
+          slot.innerHTML = `<span class="item-key-badge">${idx + 1}</span>${imgHtml}`;
+        } else {
+          slot.className = 'item-slot';
+          slot.dataset.item = '';
+          slot.title = 'Empty Slot';
+          slot.innerHTML = `<span class="item-key-badge">${idx + 1}</span><span></span>`;
+        }
+      });
+    }
+
+    // Toolbelt slot selection
+    document.querySelectorAll('.item-slot').forEach(slot => {
+      slot.onclick = () => {
+        sound.init();
+        const itemId = slot.dataset.item;
+        if (itemId) {
+          selectedItem = (selectedItem === itemId) ? null : itemId;
+          sound.click();
+          renderToolbelt();
+          if (selectedItem) {
+            const itm = INVENTORY_DB[selectedItem];
+            setDialogue('Oslo', 'assets/city/037_RICKpict.png', `Selected [${itm.name}] (${itm.type}). Tap a hotspot to use it!`);
+          }
+        }
+      };
+    });
+
+    // Open Backpack Modal
+    document.getElementById('btnNavBackpack').onclick = () => {
+      sound.init();
+      sound.click();
+      openBackpackModal();
+    };
+
+    function openBackpackModal() {
+      const grid = document.getElementById('backpackGrid');
+      grid.innerHTML = '';
+
+      inventory.forEach(itemId => {
+        const itm = INVENTORY_DB[itemId];
+        const card = document.createElement('div');
+        card.className = 'bp-card';
+        const imgHtml = itm.img ? `<img src="${itm.img}" style="height:44px;width:44px;object-fit:contain;image-rendering:pixelated;" alt="${itm.name}">` : `<div class="bp-card-icon">${itm.icon}</div>`;
+        card.innerHTML = `
+          <div class="bp-card-icon">${imgHtml}</div>
+          <div class="bp-card-name">${itm.name}</div>
+          <div class="bp-card-type">${itm.type}</div>
+        `;
+        card.onclick = () => {
+          sound.click();
+          document.getElementById('toolDetailBox').style.display = 'block';
+          document.getElementById('toolDetailTitle').textContent = `${itm.icon} ${itm.name} — ${itm.type}`;
+          document.getElementById('toolDetailDesc').textContent = itm.desc;
+        };
+        grid.appendChild(card);
+      });
+
+      document.getElementById('backpackModal').classList.remove('hidden');
+    }
+
+    document.getElementById('btnCloseBackpack').onclick = () => {
+      document.getElementById('backpackModal').classList.add('hidden');
+    };
+
+    /* =====================================================================
+       INTERACTIVE SIMPLE MACHINE PUZZLE (GEARBOX)
+       ===================================================================== */
+    const puzzleModal = document.getElementById('puzzleModal');
+    const puzzleCanvas = document.getElementById('puzzleCanvas');
+    const pctx = puzzleCanvas.getContext('2d');
+    let gearAngle = 0;
+    let gearSolved = false;
+
+    function openPuzzleModal(puzzleType) {
+      sound.gearRachet();
+      gearSolved = gameState.shopGearConnected;
+      puzzleModal.classList.remove('hidden');
+
+      const controls = document.getElementById('puzzleControls');
+      controls.innerHTML = `
+        <button id="btnSpinGears" class="btn-action-sub" style="font-weight:900;">⚙️ Turn Drive Crank</button>
+        <button id="btnAlignGears" class="btn-action-sub" style="background:#b45309; color:#fff;">🔧 Align Pitch Teeth</button>
+      `;
+
+      document.getElementById('btnSpinGears').onclick = () => {
+        sound.gearRachet();
+        gearAngle += 0.4;
+        drawPuzzleCanvas();
+      };
+
+      document.getElementById('btnAlignGears').onclick = () => {
+        sound.discoveryChime();
+        gearSolved = true;
+        gameState.shopGearConnected = true;
+        document.getElementById('puzzleFeedback').textContent = '✅ Gears Meshed! Torque transferred from drive to generator!';
+        drawPuzzleCanvas();
+      };
+
+      document.getElementById('puzzleFeedback').textContent = gearSolved
+        ? '✅ Gears Meshed! Generator running smoothly.'
+        : 'Align the pitch circle teeth to mesh the drive gear with the dynamo.';
+
+      drawPuzzleCanvas();
+    }
+
+    function drawPuzzleCanvas() {
+      const pw = puzzleCanvas.width;
+      const ph = puzzleCanvas.height;
+
+      pctx.fillStyle = '#0c0704';
+      pctx.fillRect(0, 0, pw, ph);
+
+      // Draw Drive Gear (Left)
+      drawSingleGear(pctx, pw * 0.3, ph * 0.5, 48, 12, gearAngle, '#d97706');
+
+      // Draw Idler / Dynamo Gear (Right)
+      const gear2X = gearSolved ? pw * 0.3 + 92 : pw * 0.3 + 120;
+      drawSingleGear(pctx, gear2X, ph * 0.5, 48, 12, gearSolved ? -gearAngle : 0, gearSolved ? '#38bdf8' : '#64748b');
+
+      // Connection shaft
+      pctx.fillStyle = '#fde047';
+      pctx.font = 'bold 11px JetBrains Mono';
+      pctx.textAlign = 'center';
+      pctx.fillText('DRIVE MOTOR (INPUT)', pw * 0.3, ph * 0.88);
+      pctx.fillText(gearSolved ? 'DYNAMO (ENGAGED)' : 'DYNAMO (DISENGAGED)', gear2X, ph * 0.88);
+    }
+
+    function drawSingleGear(ctx, cx, cy, r, numTeeth, angle, color) {
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(angle);
+
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(0, 0, r - 6, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Teeth
+      for (let i = 0; i < numTeeth; i++) {
+        const theta = (i / numTeeth) * Math.PI * 2;
+        ctx.save();
+        ctx.rotate(theta);
+        ctx.fillRect(-6, -r, 12, 10);
+        ctx.restore();
+      }
+
+      // Center hole
+      ctx.fillStyle = '#050302';
+      ctx.beginPath();
+      ctx.arc(0, 0, 12, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    document.getElementById('btnClosePuzzle').onclick = () => {
+      puzzleModal.classList.add('hidden');
+    };
+
+    /* =====================================================================
+       TOP BUTTONS & RESET / TITLE LOGIC
+       ===================================================================== */
+    // Map Button
+    document.getElementById('btnNavMap').onclick = () => {
+      sound.init();
+      sound.click();
+      switchScene('map');
+    };
+
+    // Clues / Journal Button
+    document.getElementById('btnNavHelp').onclick = () => {
+      sound.init();
+      sound.click();
+      setDialogue('Detective Oslo', '🦁', 'CLUE LOG: 1. Use Lever on the Old House window. 2. Solve Al\'s Gearbox in the Workshop. 3. Unlock the Museum Vault. 4. Restore the Machine Core!');
+    };
+
+    // Reset Scene / Puzzle Button
+    document.getElementById('btnResetScene').onclick = () => {
+      resetCurrentScene();
+    };
+
+    function resetCurrentScene() {
+      sound.init();
+      sound.steamWhoosh();
+      if (currentSceneId === 'shop') {
+        gameState.shopGearConnected = false;
+        gearSolved = false;
+        setDialogue('Oslo', '🦁', 'Workshop mechanisms reset to initial state.');
+      } else {
+        selectedItem = null;
+        renderToolbelt();
+        setDialogue('Oslo', '🦁', `Scene [${SCENES[currentSceneId].name}] reset. Ready for inspection!`);
+      }
+      drawScene();
+    }
+
+    // Title Screen Button
+    document.getElementById('btnExitTitle').onclick = () => {
+      document.getElementById('titleModal').classList.remove('hidden');
+    };
+
+    document.getElementById('btnStartAdventure').onclick = () => {
+      sound.init();
+      sound.discoveryChime();
+      document.getElementById('titleModal').classList.add('hidden');
+      switchScene('map');
+    };
+
+    // Sound Toggle Button
+    document.getElementById('btnSound').onclick = () => {
+      sound.soundEnabled = !sound.soundEnabled;
+      document.getElementById('btnSound').textContent = sound.soundEnabled ? '🔊' : '🔇';
+    };
+
+    /* =====================================================================
+       NATIVE KEYBOARD SHORTCUTS
+       ===================================================================== */
+    window.addEventListener('keydown', (e) => {
+      sound.init();
+      switch (e.key) {
+        case 'm':
+        case 'M':
+        case 'Tab':
+          e.preventDefault();
+          switchScene('map');
+          break;
+        case 'b':
+        case 'B':
+        case 'i':
+        case 'I':
+          e.preventDefault();
+          openBackpackModal();
+          break;
+        case 'r':
+        case 'R':
+          e.preventDefault();
+          resetCurrentScene();
+          break;
+        case 'Escape':
+          e.preventDefault();
+          document.getElementById('titleModal').classList.remove('hidden');
+          break;
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+          const slotIdx = parseInt(e.key, 10) - 1;
+          if (inventory[slotIdx]) {
+            selectedItem = (selectedItem === inventory[slotIdx]) ? null : inventory[slotIdx];
+            sound.click();
+            renderToolbelt();
+          }
+          break;
+      }
+    });
+
+    // Initial load
+    resizeCanvas();
+    renderToolbelt();
+    switchScene('map');
+  </script>
+</body>
+</html>
+
