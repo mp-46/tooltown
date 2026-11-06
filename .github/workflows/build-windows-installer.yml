@@ -40,3 +40,4 @@ jobs:
           files: dist/MysteryOfTooltown_Setup.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

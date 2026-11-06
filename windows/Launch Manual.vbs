@@ -7,3 +7,4 @@ exePath = """" & scriptDir & "\otvdm\otvdmw.exe"""
 manualPath = """" & scriptDir & "\game\TTMANUAL.EXE"""
 
 WshShell.Run exePath & " " & manualPath, 0, False
+

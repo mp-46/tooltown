@@ -21,15 +21,13 @@ To read the original 1996 electronic illustrated manual, double-click **`Launch 
 
 ## 📦 Building the Full Windows 11 Installer (`Setup.exe`)
 
-We include a complete Inno Setup script that builds a standalone `MysteryOfTooltown_Setup.exe` installer with:
-* Standard Windows 11 installation wizard
-* Installs to `C:\Program Files (x86)\The Mystery of Tooltown`
-* Creates Start Menu shortcuts
-* Creates Desktop icon with the authentic 1996 `TOOL.ICO` icon
-* Registers a clean uninstaller in Windows 11 **Settings > Installed Apps**
+For a very simple, beginner-friendly guide, see **[HOW_TO_CREATE_INSTALLER.md](../HOW_TO_CREATE_INSTALLER.md)**.
 
-### How to Compile Locally
-1. Download and install [Inno Setup 6](https://jrsoftware.org/isdl.php) (free & open source).
+### Quick 1-Click Rebuild
+Inside `installer/`, simply double-click **`BUILD_INSTALLER.bat`**. It will automatically locate the compiler, build the installer, and open the `dist/` folder with your new `MysteryOfTooltown_Setup.exe`.
+
+### How to Compile Locally in Inno Setup
+1. Inno Setup 6 is installed on this PC (or downloadable from [jrsoftware.org](https://jrsoftware.org/isdl.php)).
 2. Right-click `installer/tooltown_setup.iss` and select **Compile**.
 3. The standalone installer `MysteryOfTooltown_Setup.exe` will be generated in `dist/`.
 
@@ -43,3 +41,4 @@ A GitHub Actions workflow (`.github/workflows/build-windows-installer.yml`) is i
 * **Original Executable**: Macromedia Director 4 (`MV93`) 16-bit New Executable (`TOOL.EXE`).
 * **Compatibility Layer**: OpenThunk VDM (WineVDM v0.9.0), translating 16-bit Windows API calls into 64-bit Windows 11 kernel calls.
 * **Display Support**: Automatically runs in high-compatibility windowed mode with integer-friendly scaling.
+

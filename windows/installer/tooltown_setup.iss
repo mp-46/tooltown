@@ -49,3 +49,4 @@ Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Paramet
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Parameters: """{app}\game\TOOL.EXE"""; WorkingDir: "{app}\game"; Description: "{cm:LaunchProgram,{#MyAppName}}"; Flags: nowait postinstall skipifsilent
+

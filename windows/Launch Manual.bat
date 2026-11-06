@@ -11,3 +11,4 @@ if not exist "game\TTMANUAL.EXE" (
 
 start "" "otvdm\otvdmw.exe" "game\TTMANUAL.EXE"
 exit /b 0
+
