@@ -15,7 +15,8 @@ if not exist "otvdm\otvdmw.exe" (
     exit /b 1
 )
 
-:: Launch with windowed WineVDM runner without keeping console window open
-start "" "otvdm\otvdmw.exe" "game\TOOL.EXE"
+:: Launch with windowed WineVDM runner from the game directory
+cd /d "%~dp0game"
+start "" "%~dp0otvdm\otvdmw.exe" "%~dp0game\TOOL.EXE"
 exit /b 0
 
