@@ -13,6 +13,8 @@ set "ISCC_PATH="
 :: Check common Inno Setup 6 installation paths
 if exist "C:\Users\%USERNAME%\AppData\Local\Programs\Inno Setup 6\ISCC.exe" (
     set "ISCC_PATH=C:\Users\%USERNAME%\AppData\Local\Programs\Inno Setup 6\ISCC.exe"
+) else if exist "%LOCALAPPDATA%\Programs\Inno Setup 6\ISCC.exe" (
+    set "ISCC_PATH=%LOCALAPPDATA%\Programs\Inno Setup 6\ISCC.exe"
 ) else if exist "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" (
     set "ISCC_PATH=C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
 ) else if exist "C:\Program Files\Inno Setup 6\ISCC.exe" (
@@ -26,8 +28,8 @@ if "%ISCC_PATH%"=="" (
     echo Press any key to install Inno Setup, or close this window to cancel.
     pause >nul
     winget install JRSoftware.InnoSetup --accept-source-agreements --accept-package-agreements --silent
-    if exist "C:\Users\%USERNAME%\AppData\Local\Programs\Inno Setup 6\ISCC.exe" (
-        set "ISCC_PATH=C:\Users\%USERNAME%\AppData\Local\Programs\Inno Setup 6\ISCC.exe"
+    if exist "%LOCALAPPDATA%\Programs\Inno Setup 6\ISCC.exe" (
+        set "ISCC_PATH=%LOCALAPPDATA%\Programs\Inno Setup 6\ISCC.exe"
     ) else if exist "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" (
         set "ISCC_PATH=C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
     )
@@ -54,7 +56,7 @@ if %ERRORLEVEL% equ 0 (
     echo ========================================================
     echo.
     echo Opening output folder...
-    explorer "..\..\dist"
+    start "" explorer.exe "%~dp0..\..\dist"
 ) else (
     echo.
     echo [X] An error occurred during compilation.

@@ -15,7 +15,8 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName={autopf}\{#MyAppName}
+; Install to user's Local AppData by default so full read/write permissions are guaranteed
+DefaultDirName={localappdata}\Programs\{#MyAppName}
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 OutputDir=..\..\dist
@@ -26,12 +27,23 @@ SolidCompression=yes
 WizardStyle=modern
 UninstallDisplayIcon={app}\game\TOOL.ICO
 DisableProgramGroupPage=auto
+; Allow standard user install without UAC permissions error
+PrivilegesRequired=lowest
+PrivilegesRequiredOverridesAllowed=dialog
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
+
+[Dirs]
+; Ensure full write permissions for game state and driver caches
+Name: "{app}"; Permissions: users-full
+Name: "{app}\game"; Permissions: users-full
+Name: "{app}\otvdm"; Permissions: users-full
+Name: "{app}\otvdm\WINDOWS"; Permissions: users-full
+Name: "{app}\otvdm\WINDOWS\SYSTEM"; Permissions: users-full
 
 [Files]
 Source: "..\game\*"; DestDir: "{app}\game"; Flags: ignoreversion recursesubdirs createallsubdirs
@@ -42,11 +54,10 @@ Source: "..\Launch Manual.bat"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\Launch Manual.vbs"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
-Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Parameters: """{app}\game\TOOL.EXE"""; WorkingDir: "{app}\game"; IconFilename: "{app}\game\TOOL.ICO"
-Name: "{group}\Tooltown Electronic Manual"; Filename: "{app}\{#MyAppExeName}"; Parameters: """{app}\game\TTMANUAL.EXE"""; WorkingDir: "{app}\game"; IconFilename: "{app}\game\TOOL.ICO"
+Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Parameters: """{app}\game\TOOL.EXE"""; WorkingDir: "{app}"; IconFilename: "{app}\game\TOOL.ICO"
+Name: "{group}\Tooltown Electronic Manual"; Filename: "{app}\{#MyAppExeName}"; Parameters: """{app}\game\TTMANUAL.EXE"""; WorkingDir: "{app}"; IconFilename: "{app}\game\TOOL.ICO"
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
-Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Parameters: """{app}\game\TOOL.EXE"""; WorkingDir: "{app}\game"; IconFilename: "{app}\game\TOOL.ICO"; Tasks: desktopicon
+Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Parameters: """{app}\game\TOOL.EXE"""; WorkingDir: "{app}"; IconFilename: "{app}\game\TOOL.ICO"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\{#MyAppExeName}"; Parameters: """{app}\game\TOOL.EXE"""; WorkingDir: "{app}\game"; Description: "{cm:LaunchProgram,{#MyAppName}}"; Flags: nowait postinstall skipifsilent
-
+Filename: "{app}\{#MyAppExeName}"; Parameters: """{app}\game\TOOL.EXE"""; WorkingDir: "{app}"; Description: "{cm:LaunchProgram,{#MyAppName}}"; Flags: nowait postinstall skipifsilent
