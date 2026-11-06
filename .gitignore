@@ -3,4 +3,6 @@ Thumbs.db
 *.pyc
 __pycache__/
 *.tmp
+dist/
+*.zip
 

@@ -3,8 +3,9 @@
 > **An authentic HTML5 & Touchscreen remaster of the 1996 CD-ROM edutainment classic *The Mystery of Tooltown*, restored with original 256-color VGA art and digitized audio.**
 
 [![Live Demo](https://img.shields.io/badge/Demo-Play%20Online-brightgreen?style=for-the-badge&logo=googlechrome)](https://mp-46.github.io/tooltown/)
-[![Platform](https://img.shields.io/badge/Platform-HTML5%20%7C%20Touch%20%7C%20Desktop-blue?style=for-the-badge)](https://github.com/mp-46/tooltown)
+[![Platform](https://img.shields.io/badge/Platform-HTML5%20%7C%20Windows%2011%20%7C%20Touch-blue?style=for-the-badge)](https://github.com/mp-46/tooltown)
 [![Original](https://img.shields.io/badge/Original-1996%20Macromedia%20Director%204-orange?style=for-the-badge)](https://archive.org/details/the-mystery-of-tooltown)
+[![Windows 11](https://img.shields.io/badge/Windows%2011-Ready%20%28x64%20%26%20ARM64%29-0078D4?style=for-the-badge&logo=windows11&logoColor=white)](windows/)
 
 ---
 
@@ -67,7 +68,25 @@ The game explores the physics of all **6 classical simple machines**:
 
 ---
 
-## 🚀 Running Locally
+## 🪟 Windows 10 & 11 Native Edition
+
+For the authentic 1996 CD-ROM experience, this repository also includes the complete original Macromedia Director release pre-packaged with an integrated [WineVDM (OTVDM)](https://github.com/otya128/winevdm) 16-bit runner for **Windows 10 & Windows 11 (x64 and ARM64)**.
+
+### Portable 1-Click Launch (No Install Required)
+1. Open the [`windows/`](windows/) folder.
+2. Double-click **`Play Mystery of Tooltown.vbs`** (silent launch) or **`Play Mystery of Tooltown.bat`**.
+3. The game starts immediately with original audio and 256-color graphics!
+4. To view the electronic manual, run **`Launch Manual.vbs`**.
+
+### Full Windows 11 Installer (`Setup.exe`)
+A complete Inno Setup script is provided at [`windows/installer/tooltown_setup.iss`](windows/installer/tooltown_setup.iss) which creates a single-file `MysteryOfTooltown_Setup.exe` with:
+* Start Menu and Desktop shortcuts with the official 1996 icon (`TOOL.ICO`)
+* Installation to `C:\Program Files (x86)\The Mystery of Tooltown`
+* Clean uninstaller registered in Windows 11 **Settings > Installed Apps**
+
+---
+
+## 🚀 Running Locally (HTML5 Remaster)
 
 Clone this repository and serve it with any local HTTP server:
 
