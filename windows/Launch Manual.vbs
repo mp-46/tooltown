@@ -4,7 +4,6 @@ scriptDir = fso.GetParentFolderName(WScript.ScriptFullName)
 WshShell.CurrentDirectory = scriptDir & "\game"
 
 exePath = """" & scriptDir & "\otvdm\otvdmw.exe"""
-manualPath = """" & scriptDir & "\game\TTMANUAL.EXE"""
 
-WshShell.Run exePath & " " & manualPath, 0, False
+WshShell.Run exePath & " TTMANUAL.EXE", 0, False
 

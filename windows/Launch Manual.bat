@@ -10,6 +10,6 @@ if not exist "game\TTMANUAL.EXE" (
 )
 
 cd /d "%~dp0game"
-start "" "%~dp0otvdm\otvdmw.exe" "%~dp0game\TTMANUAL.EXE"
+start "" "%~dp0otvdm\otvdmw.exe" TTMANUAL.EXE
 exit /b 0
 

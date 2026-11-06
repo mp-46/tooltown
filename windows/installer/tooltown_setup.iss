@@ -15,8 +15,8 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-; Install to user's Local AppData by default so full read/write permissions are guaranteed
-DefaultDirName={localappdata}\Programs\{#MyAppName}
+; Install to a short, space-free path in Local AppData so 16-bit DOS 64-char path limits are never exceeded
+DefaultDirName={localappdata}\Tooltown
 UsePreviousAppDir=no
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
@@ -55,10 +55,10 @@ Source: "..\Launch Manual.bat"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\Launch Manual.vbs"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
-Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Parameters: """{app}\game\TOOL.EXE"""; WorkingDir: "{app}\game"; IconFilename: "{app}\game\TOOL.ICO"
-Name: "{group}\Tooltown Electronic Manual"; Filename: "{app}\{#MyAppExeName}"; Parameters: """{app}\game\TTMANUAL.EXE"""; WorkingDir: "{app}\game"; IconFilename: "{app}\game\TOOL.ICO"
+Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Parameters: "TOOL.EXE"; WorkingDir: "{app}\game"; IconFilename: "{app}\game\TOOL.ICO"
+Name: "{group}\Tooltown Electronic Manual"; Filename: "{app}\{#MyAppExeName}"; Parameters: "TTMANUAL.EXE"; WorkingDir: "{app}\game"; IconFilename: "{app}\game\TOOL.ICO"
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
-Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Parameters: """{app}\game\TOOL.EXE"""; WorkingDir: "{app}\game"; IconFilename: "{app}\game\TOOL.ICO"; Tasks: desktopicon
+Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Parameters: "TOOL.EXE"; WorkingDir: "{app}\game"; IconFilename: "{app}\game\TOOL.ICO"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\{#MyAppExeName}"; Parameters: """{app}\game\TOOL.EXE"""; WorkingDir: "{app}\game"; Description: "{cm:LaunchProgram,{#MyAppName}}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\{#MyAppExeName}"; Parameters: "TOOL.EXE"; WorkingDir: "{app}\game"; Description: "{cm:LaunchProgram,{#MyAppName}}"; Flags: nowait postinstall skipifsilent
